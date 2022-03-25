@@ -30,12 +30,12 @@ while True:
     if btn_red.is_pressed:
         print("red pressed")
         relay_red.on()
-        sleep(3)
+        sleep(1.5)
         relay_red.off()
     if btn_blue.is_pressed:
         print("blue pressed")
         relay_blue.on()
-        sleep(3)
+        sleep(1.5)
         relay_blue.off()
     if btn_rotor.is_pressed:
         print('rotary encoder pressed')
