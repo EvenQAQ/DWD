@@ -39,8 +39,8 @@ while True:
         relay_blue.off()
     if btn_rotor.is_pressed:
         print('rotary encoder pressed')
-        sleep(0.5)
         print(rotor.value * 16)
+        sleep(0.5)
     if rotor.when_rotated:
         print(rotor.value * 16)
 
