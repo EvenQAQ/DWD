@@ -55,7 +55,7 @@ def route_pages():
 def next_news():
     global page_num
     page_num += 1
-    if
+
     # news_pic.image = news_pages[page_num]
     # return news_pages[page_num]
 
