@@ -3,6 +3,7 @@ import os
 import sys
 import time
 from time import sleep
+import platform
 
 from guizero import App, Picture, PushButton
 from gpiozero import Button, OutputDevice, RotaryEncoder, DigitalInputDevice, InputDevice
@@ -12,12 +13,14 @@ from PIL import Image, ImageTk
 
 
 # register GPIO
+if platform. system() == "Darwin":
+    # factory = PiGPIOFactory(host='192.168.0.58') # 填写树莓派的IP地址
+    factory = PiGPIOFactory(host='10.126.159.234')
+else:
+    factory = PiGPIOFactory()
 
-factory = PiGPIOFactory()
-# factory = PiGPIOFactory(host='192.168.0.58') # 填写树莓派的IP地址
-# factory = PiGPIOFactory(host='10.126.159.234')
 btn_rotor = Button(14, pin_factory=factory)
-rotor = RotaryEncoder(15, 18, max_steps=20, threshold_steps=(3, 4), wrap=True, pin_factory=factory)
+rotor = RotaryEncoder(15, 18, max_steps=20, wrap=True, pin_factory=factory)
 
 # btn_red = Button(24, pin_factory=factory)
 # btn_blue = Button(23, pin_factory=factory)
@@ -33,20 +36,30 @@ test_news = '/Users/even/Documents/Dev/DWD/assets/test_news.png'
 test_feedback = pages_dir + '/test_feedback.png'
 
 news_pages = []
-page_num = 0
+page_num = 6
 page_map= {}
-red_chosen = []
-blue_chosen = []
+red_chosen = [0 for i in range(0, page_num)]
+blue_chosen = [0 for i in range(0, page_num)]
 
 def load_pages():
-    for i in range(0, 6):
+    for i in range(0, page_num):
         page_map[3 * i] = i
+        page_map[3 * i - 20] = i
         page_map[3 * i + 1] = i
+        page_map[3 * i - 19] = i
         page_map[3 * i + 2] = i
-    for root, dirs, files in os.walk(pages_dir):
-        for name in files:
-            if '.png' in name:
-                news_pages.append(os.path.join(root, name))
+        page_map[3 * i - 18] = i
+    page_map[18] = 5
+    page_map[-2] = 5
+    page_map[19] = 0
+    page_map[-1] = 0
+    # for root, dirs, files in os.walk(pages_dir):
+    #     for name in files:
+    #         if '.png' in name:
+    #             news_pages.append(os.path.join(root, name))
+    for i in range(0, page_num):
+        news_pages.append(os.path.join(pages_dir + "/news" + str(i) + ".png"))
+
 
 
 def route_pages():
@@ -55,9 +68,8 @@ def route_pages():
 def next_news():
     global page_num
     page_num += 1
-
-    # news_pic.image = news_pages[page_num]
-    # return news_pages[page_num]
+    news_pic.image = news_pages[page_num]
+    return news_pages[page_num]
 
 def last_news():
     global page_num
@@ -67,18 +79,22 @@ def last_news():
 
 def red_touched():
     print("red touched")
-    # red_chosen[page_num] += 1
+    red_chosen[page_map[rotor.value * 20]] += 1
     relay_red.on()
     sleep(0.8)
     relay_red.off()
+    news_pic.image = test_feedback
+    print("red: blue = " + str(red_chosen[page_map[rotor.value * 20]]) + " : " + str(blue_chosen[page_map[rotor.value * 20]]))
 
 
 def blue_touched():
     print("blue touched")
-    # blue_chosen[page_num] += 1
+    blue_chosen[page_map[rotor.value * 20]] += 1
     relay_blue.on()
     sleep(0.8)
     relay_blue.off()
+    news_pic.image = test_feedback
+    print("red: blue = " + str(red_chosen[page_map[rotor.value * 20]]) + " : " + str(blue_chosen[page_map[rotor.value * 20]]))
 
 def rotor_pressed():
     print("rotor pressed")
@@ -86,13 +102,20 @@ def rotor_pressed():
 
 def rotor_rotated():
     print("rotor rotated")
-    print(rotor.value * 16)
+    # reset value
+    if rotor.value == 1:
+        rotor.value = 0
+    if rotor.value == -1:
+        rotor.value = 0
+    print(rotor.value * 20)
+    news_pic.image = news_pages[page_map[rotor.value * 20]]
 
 # main GUI
 load_pages()
 
 print(news_pages)
 print(page_map)
+print(red_chosen)
 app = App(title="guizero", width=800, height=480)
 
 # intro = Text(app, text="Welcome to InfoClinic", size=40, font="Monaco", color="lavender")
@@ -106,8 +129,8 @@ btn_blue = PushButton(app, command=blue_touched, visible=False)
 
 btn_rotor.when_pressed = rotor_pressed
 rotor.when_rotated = rotor_rotated
-rotor.when_rotated_clockwise = next_news
-rotor.when_rotated_counter_clockwise = last_news
+# rotor.when_rotated_clockwise = next_news
+# rotor.when_rotated_counter_clockwise = last_news
 touch_red.when_activated = red_touched
 touch_blue.when_activated = blue_touched
 
