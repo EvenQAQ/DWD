@@ -38,17 +38,25 @@ test_feedback = pages_dir + '/test_feedback.png'
 news_pages = []
 page_num = 6
 page_map= {}
+valid_map = {}
 red_chosen = [0 for i in range(0, page_num)]
 blue_chosen = [0 for i in range(0, page_num)]
 
 def load_pages():
     for i in range(0, page_num):
         page_map[3 * i] = i
-        page_map[3 * i - 20] = i
         page_map[3 * i + 1] = i
-        page_map[3 * i - 19] = i
         page_map[3 * i + 2] = i
+        page_map[3 * i - 20] = i
+        page_map[3 * i - 19] = i
         page_map[3 * i - 18] = i
+        valid_map[3 * i] = False
+        valid_map[3 * i + 1] = True
+        valid_map[3 * i + 2] = True
+        valid_map[3 * i - 20] = False
+        valid_map[3 * i - 19] = True
+        valid_map[3 * i - 18] = True
+
     page_map[18] = 5
     page_map[-2] = 5
     page_map[19] = 0
@@ -78,23 +86,30 @@ def last_news():
     return news_pages[page_num]
 
 def red_touched():
-    print("red touched")
-    red_chosen[page_map[rotor.value * 20]] += 1
-    relay_red.on()
-    sleep(0.8)
-    relay_red.off()
-    news_pic.image = test_feedback
-    print("red: blue = " + str(red_chosen[page_map[rotor.value * 20]]) + " : " + str(blue_chosen[page_map[rotor.value * 20]]))
+    if valid_map[rotor.value * 20]:
+        print("red touched")
+        red_chosen[page_map[rotor.value * 20]] += 1
+        relay_red.on()
+        sleep(0.8)
+        relay_red.off()
+        news_pic.image = test_feedback
+        print("red: blue = " + str(red_chosen[page_map[rotor.value * 20]]) + " : " + str(blue_chosen[page_map[rotor.value * 20]]))
+    else:
+        print("position error")
+
 
 
 def blue_touched():
     print("blue touched")
-    blue_chosen[page_map[rotor.value * 20]] += 1
-    relay_blue.on()
-    sleep(0.8)
-    relay_blue.off()
-    news_pic.image = test_feedback
-    print("red: blue = " + str(red_chosen[page_map[rotor.value * 20]]) + " : " + str(blue_chosen[page_map[rotor.value * 20]]))
+    if valid_map[rotor.value * 20]:
+        blue_chosen[page_map[rotor.value * 20]] += 1
+        relay_blue.on()
+        sleep(0.8)
+        relay_blue.off()
+        news_pic.image = test_feedback
+        print("red: blue = " + str(red_chosen[page_map[rotor.value * 20]]) + " : " + str(blue_chosen[page_map[rotor.value * 20]]))
+    else:
+        print("position error")
 
 def rotor_pressed():
     print("rotor pressed")
