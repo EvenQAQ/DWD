@@ -7,7 +7,7 @@ import sys
 import time
 from PIL import Image, ImageTk
 import tkinter as tk
-import serial
+
 
 pages_dir = './assets'
 test_welcome = pages_dir + '/test_welcome.png'
