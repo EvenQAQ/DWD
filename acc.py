@@ -1,92 +1,82 @@
 #coding=utf-8
 
-import smbus			#import SMBus module of I2C
-from time import sleep          #import
+#coding:utf-8
+
+import smbus
 import math
+import time
 
-#some MPU6050 Registers and their Address
-PWR_MGMT_1   = 0x6B
-SMPLRT_DIV   = 0x19
-CONFIG       = 0x1A
-GYRO_CONFIG  = 0x1B
-INT_ENABLE   = 0x38
-ACCEL_XOUT_H = 0x3B
-ACCEL_YOUT_H = 0x3D
-ACCEL_ZOUT_H = 0x3F
-GYRO_XOUT_H  = 0x43
-GYRO_YOUT_H  = 0x45
-GYRO_ZOUT_H  = 0x47
+# 电源控制寄存器地址
+power_regist = 0x6b
 
+# I2C模块初始化
+bus = smbus.SMBus(1)
+# 外接I2C设备的地址
+address = 0x68
 
-def MPU_Init():
-	#write to sample rate register
-	bus.write_byte_data(Device_Address, SMPLRT_DIV, 7)
+# 封装一些读取数据的功能函数
 
-	#Write to power management register
-	bus.write_byte_data(Device_Address, PWR_MGMT_1, 1)
+# 读取一个字长度的数据(16位)
+def readWord(adr):
+    high = bus.read_byte_data(address, adr)
+    low = bus.read_byte_data(address, adr+1)
+    val = (high << 8) + low
+    return val
 
-	#Write to Configuration register
-	bus.write_byte_data(Device_Address, CONFIG, 0)
+# 将读取到的数据转换为原码 (有符号数本身是采用补码方式存储的)
+def readWordReal(adr):
+    val = readWord(adr)
+    x = 0xffff
+    # 首位为1 表示是负数
+    if (val >= 0x8000):
+        # 求原码
+        return -((x - val)+1)
+    else:
+        return val
 
-	#Write to Gyro configuration register
-	bus.write_byte_data(Device_Address, GYRO_CONFIG, 24)
-
-	#Write to interrupt enable register
-	bus.write_byte_data(Device_Address, INT_ENABLE, 1)
-
-def read_raw_data(addr):
-	#Accelero and Gyro value are 16-bit
-    high = bus.read_byte_data(Device_Address, addr)
-    low = bus.read_byte_data(Device_Address, addr+1)
-
-    #concatenate higher and lower value
-    value = ((high << 8) | low)
-
-    #to get signed value from mpu6050
-    if(value > 32768):
-            value = value - 65536
-    return value
-
+# 已知加速度求角度值
 def dist(a, b):
-    return math.sqrt(a * a + b * b)
+    return math.sqrt((a*a)+(b*b))
 
 def getRotationX(x, y, z):
-    radians = math.atan2(y, dist(x, z))
+    radians = math.atan2(y, dist(x,z))
     return math.degrees(radians)
 
 def getRotationY(x, y, z):
-    radians = math.atan2(x, dist(y, z))
+    radians = math.atan2(x, dist(y,z))
     return math.degrees(radians)
 
-bus = smbus.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
-Device_Address = 0x68   # MPU6050 device address
+# 设置电源模式
+bus.write_byte_data(address, power_regist, 0)
 
-MPU_Init()
-print (" Reading Data of Gyroscope and Accelerometer")
+
 while True:
-    sleep(0.5)
-	#Read Accelerometer raw value
-	acc_x = read_raw_data(ACCEL_XOUT_H)
-	acc_y = read_raw_data(ACCEL_YOUT_H)
-	acc_z = read_raw_data(ACCEL_ZOUT_H)
+    time.sleep(0.5)
+    print("螺旋仪数据-----------")
+    gyroX = readWordReal(0x43)
+    gyroY = readWordReal(0x45)
+    gyroZ = readWordReal(0x47)
 
-	#Read Gyroscope raw value
-	gyro_x = read_raw_data(GYRO_XOUT_H)
-	gyro_y = read_raw_data(GYRO_YOUT_H)
-	gyro_z = read_raw_data(GYRO_ZOUT_H)
+    print("X轴陀螺仪原始数据：", gyroX, "X轴每秒旋转度数：", gyroX/131)
+    print("Y轴陀螺仪原始数据：", gyroY, "Y轴每秒旋转度数：", gyroY/131)
+    print("Z轴陀螺仪原始数据：", gyroZ, "Z轴每秒旋转度数：", gyroZ/131)
 
-	#Full scale range +/- 250 degree/C as per sensitivity scale factor
-	Ax = acc_x/16384.0
-	Ay = acc_y/16384.0
-	Az = acc_z/16384.0
+    print("加速度数据----------")
+    accelX = readWordReal(0x3b)
+    accelY = readWordReal(0x3d)
+    accelZ = readWordReal(0x3f)
 
-	Gx = gyro_x/131.0
-	Gy = gyro_y/131.0
-	Gz = gyro_z/131.0
+    print("X轴加速度原始数据：", accelX, "X轴加速度：", accelX/16384)
+    print("Y轴加速度原始数据：", accelY, "Y轴加速度：", accelY/16384)
+    print("Z轴加速度原始数据：", accelZ, "Z轴加速度：", accelZ/16384)
+
+    print("摄氏温度数据--------")
+    temp = readWordReal(0x41)
+    print("温度原始数据：", temp, "摄氏度：", temp/340 + 36.53)
+
+    print("旋转家角度数据-------")
+    print("X轴旋转度数：", getRotationX(accelX/16384, accelY/16384, accelZ/16384))
+    print("Y轴旋转度数：", getRotationX(accelX/16384, accelY/16384, accelZ/16384))
 
 
-	print ("Gx=%.2f" %Gx, u'\u00b0'+ "/s", "\tGy=%.2f" %Gy, u'\u00b0'+ "/s", "\tGz=%.2f" %Gz, u'\u00b0'+ "/s", "\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az)
-    print("angle X = ", getRotationX(Ax, Ay, Az))
-    print("angle Y = ", getRotationY(Ax, Ay, Az))
-	sleep(1)
 
