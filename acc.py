@@ -1,19 +1,16 @@
-'''
-        Read Gyro and Accelerometer by Interfacing Raspberry Pi with MPU6050 using Python
-	http://www.electronicwings.com
-'''
+#coding=utf-8
 
-# # Import the RemoteI2CClient class
-# from remote_i2c import RemoteI2CClient
+# Import the RemoteI2CClient class
+from remote_i2c import RemoteI2CClient
 
-# # Connect to the I2C Host (see docstring for additional args)
-# remote_i2c_host = '192.168.0.58'
-# bus = RemoteI2CClient(remote_i2c_host)
-# bus.connect()
+# Connect to the I2C Host (see docstring for additional args)
+remote_i2c_host = '192.168.0.58'
+bus = RemoteI2CClient(remote_i2c_host)
+bus.connect()
 
-import smbus			#import SMBus module of I2C
+# import smbus			#import SMBus module of I2C
 from time import sleep          #import
-
+import math
 # # Perform I2C operations as you normally would with SMBus2
 # addr = 0x67
 # reg = 0xf2
@@ -64,8 +61,18 @@ def read_raw_data(addr):
                 value = value - 65536
         return value
 
+def dist(a, b):
+    return math.sqrt(a * a + b * b)
 
-bus = smbus.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
+def getRotationX(x, y, z):
+    radians = math.atan2(y, dist(x, z))
+    return math.degrees(radians)
+
+def getRotationY(x, y, z):
+    radians = math.atan2(x, dist(y, z))
+    return math.degrees(radians)
+
+# bus = smbus.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
 Device_Address = 0x68   # MPU6050 device address
 
 MPU_Init()
