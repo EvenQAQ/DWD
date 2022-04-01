@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 # Import the RemoteI2CServer class
 from remote_i2c import RemoteI2CServer

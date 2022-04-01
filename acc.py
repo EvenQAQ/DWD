@@ -1,22 +1,8 @@
 #coding=utf-8
 
-# Import the RemoteI2CClient class
-from remote_i2c import RemoteI2CClient
-
-# Connect to the I2C Host (see docstring for additional args)
-remote_i2c_host = '192.168.0.58'
-bus = RemoteI2CClient(remote_i2c_host)
-bus.connect()
-
-# import smbus			#import SMBus module of I2C
+import smbus			#import SMBus module of I2C
 from time import sleep          #import
 import math
-# # Perform I2C operations as you normally would with SMBus2
-# addr = 0x67
-# reg = 0xf2
-# value = bus.read_byte_data(addr, reg)
-# bus.write_byte_data(addr, reg, value + 1 % 0xff)
-
 
 #some MPU6050 Registers and their Address
 PWR_MGMT_1   = 0x6B
@@ -72,15 +58,13 @@ def getRotationY(x, y, z):
     radians = math.atan2(x, dist(y, z))
     return math.degrees(radians)
 
-# bus = smbus.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
+bus = smbus.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
 Device_Address = 0x68   # MPU6050 device address
 
 MPU_Init()
-
 print (" Reading Data of Gyroscope and Accelerometer")
-
 while True:
-
+    sleep(0.5)
 	#Read Accelerometer raw value
 	acc_x = read_raw_data(ACCEL_XOUT_H)
 	acc_y = read_raw_data(ACCEL_YOUT_H)
@@ -102,8 +86,7 @@ while True:
 
 
 	print ("Gx=%.2f" %Gx, u'\u00b0'+ "/s", "\tGy=%.2f" %Gy, u'\u00b0'+ "/s", "\tGz=%.2f" %Gz, u'\u00b0'+ "/s", "\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az)
+    print("angle X = ", getRotationX(Ax, Ay, Az))
+    print("angle Y = ", getRotationY(Ax, Ay, Az))
 	sleep(1)
 
-
-# Disconnect when you're done, if you feel the need
-bus.disconnect()
