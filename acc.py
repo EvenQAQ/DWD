@@ -36,16 +36,16 @@ def MPU_Init():
 
 def read_raw_data(addr):
 	#Accelero and Gyro value are 16-bit
-        high = bus.read_byte_data(Device_Address, addr)
-        low = bus.read_byte_data(Device_Address, addr+1)
+    high = bus.read_byte_data(Device_Address, addr)
+    low = bus.read_byte_data(Device_Address, addr+1)
 
-        #concatenate higher and lower value
-        value = ((high << 8) | low)
+    #concatenate higher and lower value
+    value = ((high << 8) | low)
 
-        #to get signed value from mpu6050
-        if(value > 32768):
-                value = value - 65536
-        return value
+    #to get signed value from mpu6050
+    if(value > 32768):
+            value = value - 65536
+    return value
 
 def dist(a, b):
     return math.sqrt(a * a + b * b)
