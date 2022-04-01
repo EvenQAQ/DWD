@@ -76,7 +76,7 @@ while True:
 
     print("旋转家角度数据-------")
     print("X轴旋转度数：", getRotationX(accelX/16384, accelY/16384, accelZ/16384))
-    print("Y轴旋转度数：", getRotationX(accelX/16384, accelY/16384, accelZ/16384))
+    print("Y轴旋转度数：", getRotationY(accelX/16384, accelY/16384, accelZ/16384))
 
 
 
