@@ -5,6 +5,7 @@
 import smbus
 import math
 import time
+import keyboard
 
 # 电源控制寄存器地址
 power_regist = 0x6b
@@ -46,37 +47,39 @@ def getRotationY(x, y, z):
     radians = math.atan2(x, dist(y,z))
     return math.degrees(radians)
 
+
 # 设置电源模式
 bus.write_byte_data(address, power_regist, 0)
 
 
 while True:
+    if keyboard.is_pressed("s"):
+        print("-------------")
     time.sleep(0.5)
-    print("螺旋仪数据-----------")
-    gyroX = readWordReal(0x43)
-    gyroY = readWordReal(0x45)
-    gyroZ = readWordReal(0x47)
+    # print("螺旋仪数据-----------")
+    # gyroX = readWordReal(0x43)
+    # gyroY = readWordReal(0x45)
+    # gyroZ = readWordReal(0x47)
 
-    print("X轴陀螺仪原始数据：", gyroX, "X轴每秒旋转度数：", gyroX/131)
-    print("Y轴陀螺仪原始数据：", gyroY, "Y轴每秒旋转度数：", gyroY/131)
-    print("Z轴陀螺仪原始数据：", gyroZ, "Z轴每秒旋转度数：", gyroZ/131)
+    # print("X轴陀螺仪原始数据：", gyroX, "X轴每秒旋转度数：", gyroX/131)
+    # print("Y轴陀螺仪原始数据：", gyroY, "Y轴每秒旋转度数：", gyroY/131)
+    # print("Z轴陀螺仪原始数据：", gyroZ, "Z轴每秒旋转度数：", gyroZ/131)
 
-    print("加速度数据----------")
+    # print("加速度数据----------")
     accelX = readWordReal(0x3b)
     accelY = readWordReal(0x3d)
     accelZ = readWordReal(0x3f)
 
-    print("X轴加速度原始数据：", accelX, "X轴加速度：", accelX/16384)
-    print("Y轴加速度原始数据：", accelY, "Y轴加速度：", accelY/16384)
-    print("Z轴加速度原始数据：", accelZ, "Z轴加速度：", accelZ/16384)
+    # print("X轴加速度原始数据：", accelX, "X轴加速度：", accelX/16384)
+    # print("Y轴加速度原始数据：", accelY, "Y轴加速度：", accelY/16384)
+    # print("Z轴加速度原始数据：", accelZ, "Z轴加速度：", accelZ/16384)
 
-    print("摄氏温度数据--------")
-    temp = readWordReal(0x41)
-    print("温度原始数据：", temp, "摄氏度：", temp/340 + 36.53)
+    # print("摄氏温度数据--------")
+    # temp = readWordReal(0x41)
+    # print("温度原始数据：", temp, "摄氏度：", temp/340 + 36.53)
 
-    print("旋转家角度数据-------")
-    print("X轴旋转度数：", getRotationX(accelX/16384, accelY/16384, accelZ/16384))
-    print("Y轴旋转度数：", getRotationY(accelX/16384, accelY/16384, accelZ/16384))
+    # print("旋转家角度数据-------")
+    print(getRotationX(accelX/16384, accelY/16384, accelZ/16384), getRotationY(accelX/16384, accelY/16384, accelZ/16384))
 
 
 
