@@ -1,5 +1,5 @@
 # MPU6050 9-DoF Example Printout
-
+import math
 from mpu9250_i2c import *
 
 time.sleep(1) # delay necessary to allow mpu9250 to settle
@@ -17,5 +17,5 @@ while 1:
     # print('gyro [dps]:  x = {0:2.2f}, y = {1:2.2f}, z = {2:2.2f}'.format(wx,wy,wz))
     print('mag [uT]:   x = {0:2.2f}, y = {1:2.2f}, z = {2:2.2f}'.format(mx,my,mz))
     print('{}'.format('-'*30))
-    print(mx/mz)
+    print(math.atan2(mx, mz))
     time.sleep(1)
