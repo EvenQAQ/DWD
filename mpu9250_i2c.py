@@ -132,7 +132,7 @@ GYRO_XOUT_H  = 0x43
 GYRO_YOUT_H  = 0x45
 GYRO_ZOUT_H  = 0x47
 #AK8963 registers
-AK8963_ADDR   = 0x76
+AK8963_ADDR   = 0x0C
 AK8963_ST1    = 0x02
 HXH          = 0x04
 HYH          = 0x06
