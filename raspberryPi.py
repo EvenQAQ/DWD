@@ -183,7 +183,7 @@ app.set_full_screen()
 # text_box = TextBox(app)
 # ok = PushButton(app, command=text_update, text="mes")
 welcome = Image.open(test_welcome)
-news_pic = Picture(app, image=welcome, full_screen=True, width=800, height=450)
+news_pic = Picture(app, image=welcome, width=800, height=450)
 # news_pic.when_left_button_pressed = route_pages
 # news_pic.when_right_button_pressed = last_news
 # btn_red = PushButton(app, command=red_touched, visible=False)
