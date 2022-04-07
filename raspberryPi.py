@@ -75,11 +75,11 @@ def load_pages():
     #         if '.png' in name:
     #             news_pages.append(os.path.join(root, name))
     for i in range(0, page_num):
-        news_pages.append(os.path.join(news_dir + str(i) + ".png"))
+        news_pages.append(Image.open(os.path.join(news_dir + str(i) + ".png")))
         for j in range(1, 101):
             feedback_pages[0].append(feedback_dir + str(i) + "/F" + str(j) + ".png")
             feedback_pages[1].append(feedback_dir + str(i) + "/T" + str(j) + ".png")
-    news_pages.append("./assets/warning.png")
+    news_pages.append(Image.open("./assets/warning.png"))
 
 
 
