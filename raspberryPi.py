@@ -99,10 +99,7 @@ def last_news():
     return news_pages[page_num]
 
 def calc_feedback(num1, num2):
-    if num2 == 0:
-        return 100
-    else:
-        return num1/num2*100
+    return 100 * num1/(num1 + num2)
 
 def red_touched():
     global last_rotate
@@ -180,10 +177,10 @@ app = App(title="guizero", width=800, height=480)
 # ok = PushButton(app, command=text_update, text="mes")
 welcome = Image.open(test_welcome)
 news_pic = Picture(app, image=welcome, width=800, height=450)
-news_pic.when_left_button_pressed = route_pages
-news_pic.when_right_button_pressed = last_news
-btn_red = PushButton(app, command=red_touched, visible=False)
-btn_blue = PushButton(app, command=blue_touched, visible=False)
+# news_pic.when_left_button_pressed = route_pages
+# news_pic.when_right_button_pressed = last_news
+# btn_red = PushButton(app, command=red_touched, visible=False)
+# btn_blue = PushButton(app, command=blue_touched, visible=False)
 
 btn_rotor.when_pressed = rotor_pressed
 rotor.when_rotated = rotor_rotated
