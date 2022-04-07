@@ -105,6 +105,7 @@ def calc_feedback(num1, num2):
         return num1/num2*100
 
 def red_touched():
+    global last_rotate
     if last_rotate == 1:
         last_rotate = 0
         if valid_map[rotor.value * 20]:
@@ -120,6 +121,7 @@ def red_touched():
             print("position error")
 
 def blue_touched():
+    global last_rotate
     if last_rotate == 1:
         last_rotate = 0
         print("blue touched")
@@ -144,8 +146,9 @@ def check_change(r1, r2):
     return False
 
 def rotor_rotated():
-    last_rotate = 1
-
+    global last_rotate = 1
+    global rotor_last
+    global rotor_now
     # reset value
     if rotor.value == 1:
         rotor.value = 0
