@@ -46,6 +46,7 @@ page_map= {}
 valid_map = {}
 red_chosen = [0 for i in range(0, page_num)]
 blue_chosen = [0 for i in range(0, page_num)]
+last_rotate = 0
 
 sleep_time = 0.6
 def load_pages():
@@ -99,39 +100,44 @@ def calc_feedback(num1, num2):
     if num2 == 0:
         return 100
     else:
-        return num1/num2
+        return num1/num2*100
 
 def red_touched():
-    if valid_map[rotor.value * 20]:
-        print("red touched")
-        red_chosen[page_map[rotor.value * 20]] += 1
-        relay_red.on()
-        sleep(sleep_time)
-        relay_red.off()
-        prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
-        news_pic.image = feedback_pages[0][int(prop)]
-        print("red: blue = " , prop)
-    else:
-        print("position error")
+    if last_rotate == 1:
+        last_rotate = 0
+        if valid_map[rotor.value * 20]:
+            print("red touched")
+            red_chosen[page_map[rotor.value * 20]] += 1
+            relay_red.on()
+            sleep(sleep_time)
+            relay_red.off()
+            prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
+            news_pic.image = feedback_pages[0][int(prop)]
+            print("red: blue = " , prop)
+        else:
+            print("position error")
 
 def blue_touched():
-    print("blue touched")
-    if valid_map[rotor.value * 20]:
-        blue_chosen[page_map[rotor.value * 20]] += 1
-        relay_blue.on()
-        sleep(sleep_time)
-        relay_blue.off()
-        prop = calc_feedback(blue_chosen[page_map[rotor.value * 20]], red_chosen[page_map[rotor.value * 20]])
-        news_pic.image = feedback_pages[1][int(prop)]
-        print("blue: red = " , prop)
-    else:
-        print("position error")
+    if last_rotate == 1:
+        last_rotate = 0
+        print("blue touched")
+        if valid_map[rotor.value * 20]:
+            blue_chosen[page_map[rotor.value * 20]] += 1
+            relay_blue.on()
+            sleep(sleep_time)
+            relay_blue.off()
+            prop = calc_feedback(blue_chosen[page_map[rotor.value * 20]], red_chosen[page_map[rotor.value * 20]])
+            news_pic.image = feedback_pages[1][int(prop)]
+            print("blue: red = " , prop)
+        else:
+            print("position error")
 
 def rotor_pressed():
     print("rotor pressed")
     # next_news()
 
 def rotor_rotated():
+    last_rotate = 1
     print("rotor rotated", rotor.value * 20)
     # reset value
     if rotor.value == 1:
