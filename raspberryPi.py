@@ -19,29 +19,35 @@ if platform. system() == "Darwin":
 else:
     factory = PiGPIOFactory()
 
-btn_rotor = Button(14, pin_factory=factory)
-rotor = RotaryEncoder(15, 18, max_steps=20, wrap=True, pin_factory=factory)
+btn_rotor = Button(17, pin_factory=factory)
+rotor = RotaryEncoder(27, 22, max_steps=20, wrap=True, pin_factory=factory)
 
 # btn_red = Button(24, pin_factory=factory)
 # btn_blue = Button(23, pin_factory=factory)
-touch_red = DigitalInputDevice(24, pin_factory=factory)
-touch_blue = DigitalInputDevice(23, pin_factory=factory)
-relay_red = OutputDevice(27, pin_factory=factory, active_high=True, initial_value=False)
-relay_blue = OutputDevice(22, pin_factory=factory, active_high=True, initial_value=False)
+touch_red = DigitalInputDevice(2, pin_factory=factory)
+touch_blue = DigitalInputDevice(3, pin_factory=factory)
+relay_red = OutputDevice(14, pin_factory=factory, active_high=True, initial_value=False)
+relay_blue = OutputDevice(15, pin_factory=factory, active_high=True, initial_value=False)
 
+root_dir = "./assets/"
+news_dir = "./assets/news/"
+feedback_dir = "./assets/feedback/"
+pie_dir = "./assets/chart"
 
-pages_dir = './assets'
-test_welcome = pages_dir + '/welcome.png'
-test_news = '/Users/even/Documents/Dev/DWD/assets/test_news.png'
-test_feedback = pages_dir + '/test_feedback.png'
+test_welcome = root_dir + 'welcome.png'
+test_news = root_dir + 'test_news.png'
+test_feedback = root_dir + 'test_feedback.png'
 
 news_pages = []
+feedback_pages = [[], []]
+chart_pages = []
 page_num = 6
 page_map= {}
 valid_map = {}
 red_chosen = [0 for i in range(0, page_num)]
 blue_chosen = [0 for i in range(0, page_num)]
 
+sleep_time = 0.6
 def load_pages():
     for i in range(0, page_num):
         page_map[3 * i] = i
@@ -66,7 +72,11 @@ def load_pages():
     #         if '.png' in name:
     #             news_pages.append(os.path.join(root, name))
     for i in range(0, page_num):
-        news_pages.append(os.path.join(pages_dir + "/news" + str(i) + ".png"))
+        news_pages.append(os.path.join(news_dir + str(i) + ".png"))
+        for j in range(1, 101):
+            feedback_pages[0].append(feedback_dir + str(i) + "/F" + str(j) + ".png")
+            feedback_pages[1].append(feedback_dir + str(i) + "/T" + str(j) + ".png")
+
 
 
 
@@ -85,29 +95,35 @@ def last_news():
     news_pic.image = news_pages[page_num]
     return news_pages[page_num]
 
+def calc_feedback(num1, num2):
+    if num2 == 0:
+        return 100
+    else:
+        return num1/num2
+
 def red_touched():
     if valid_map[rotor.value * 20]:
         print("red touched")
         red_chosen[page_map[rotor.value * 20]] += 1
         relay_red.on()
-        sleep(0.8)
+        sleep(sleep_time)
         relay_red.off()
-        news_pic.image = test_feedback
-        print("red: blue = " + str(red_chosen[page_map[rotor.value * 20]]) + " : " + str(blue_chosen[page_map[rotor.value * 20]]))
+        prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
+        news_pic.image = feedback_pages[0][int(prop)]
+        print("red: blue = " , prop)
     else:
         print("position error")
-
-
 
 def blue_touched():
     print("blue touched")
     if valid_map[rotor.value * 20]:
         blue_chosen[page_map[rotor.value * 20]] += 1
         relay_blue.on()
-        sleep(0.8)
+        sleep(sleep_time)
         relay_blue.off()
-        news_pic.image = test_feedback
-        print("red: blue = " + str(red_chosen[page_map[rotor.value * 20]]) + " : " + str(blue_chosen[page_map[rotor.value * 20]]))
+        prop = calc_feedback(blue_chosen[page_map[rotor.value * 20]], red_chosen[page_map[rotor.value * 20]])
+        news_pic.image = feedback_pages[1][int(prop)]
+        print("blue: red = " , prop)
     else:
         print("position error")
 
@@ -116,15 +132,16 @@ def rotor_pressed():
     # next_news()
 
 def rotor_rotated():
-    print("rotor rotated")
+    print("rotor rotated", rotor.value * 20)
     # reset value
     if rotor.value == 1:
         rotor.value = 0
     if rotor.value == -1:
         rotor.value = 0
-    print(rotor.value * 20)
     news_pic.image = news_pages[page_map[rotor.value * 20]]
 
+def calibrate():
+    rotor.value = 0
 # main GUI
 load_pages()
 
