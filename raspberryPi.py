@@ -178,7 +178,8 @@ app = App(title="guizero", width=800, height=480)
 # intro = Text(app, text="Welcome to InfoClinic", size=40, font="Monaco", color="lavender")
 # text_box = TextBox(app)
 # ok = PushButton(app, command=text_update, text="mes")
-news_pic = Picture(app, image=test_welcome, width=800, height=450)
+welcome = Image.open(test_welcome)
+news_pic = Picture(app, image=welcome, width=800, height=450)
 news_pic.when_left_button_pressed = route_pages
 news_pic.when_right_button_pressed = last_news
 btn_red = PushButton(app, command=red_touched, visible=False)
