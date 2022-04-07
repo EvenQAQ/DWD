@@ -24,8 +24,8 @@ rotor = RotaryEncoder(27, 22, max_steps=20, wrap=True, pin_factory=factory)
 
 # btn_red = Button(24, pin_factory=factory)
 # btn_blue = Button(23, pin_factory=factory)
-touch_red = DigitalInputDevice(2, pin_factory=factory)
-touch_blue = DigitalInputDevice(3, pin_factory=factory)
+touch_red = DigitalInputDevice(23, pin_factory=factory)
+touch_blue = DigitalInputDevice(24, pin_factory=factory)
 relay_red = OutputDevice(14, pin_factory=factory, active_high=True, initial_value=False)
 relay_blue = OutputDevice(15, pin_factory=factory, active_high=True, initial_value=False)
 
