@@ -146,7 +146,8 @@ def check_change(r1, r2):
     return False
 
 def rotor_rotated():
-    global last_rotate = 1
+    global last_rotate
+    last_rotate = 1
     global rotor_last
     global rotor_now
     # reset value
