@@ -118,7 +118,7 @@ def red_touched():
             sleep(sleep_time)
             relay_red.off()
             prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
-            sleep(8)
+            sleep(3)
             news_pic.image = feedback_pages[0][int(prop)]
             print("red: blue = " , prop)
         else:
@@ -131,10 +131,12 @@ def blue_touched():
         print("blue touched")
         if valid_map[rotor.value * 20]:
             blue_chosen[page_map[rotor.value * 20]] += 1
+            news_pic.image = loading
             relay_blue.on()
             sleep(sleep_time)
             relay_blue.off()
             prop = calc_feedback(blue_chosen[page_map[rotor.value * 20]], red_chosen[page_map[rotor.value * 20]])
+            sleep(3)
             news_pic.image = feedback_pages[1][int(prop)]
             print("blue: red = " , prop)
         else:
