@@ -44,42 +44,50 @@ chart_pages = []
 page_num = 6
 page_map= {}
 valid_map = {}
-change_map = {0:1, 1:0, 3:4, 4:3, 6:7, 7:6, 9:10, 10:9, 12:13, 13:12, 15:16, 16:15, 18:19, 19:18,
-                -20:-19, -19:-20, -17:-16, -16:-17, -14:-13, -13:-14, -11:-10, -10:-11, -8:-7, -7:-8, -5:-4, -4:-5, -2:-1, -1:-2}
+change_map = {0:1, 1:0, 3:4, 4:3, 6:7, 7:6, 9:10, 10:9, 12:13, 13:12, 15:16, 16:15, 18:19, 19:18}
+# change_map = {0:1, 1:0, 3:4, 4:3, 6:7, 7:6, 9:10, 10:9, 12:13, 13:12, 15:16, 16:15, 18:19, 19:18, -20:-19, -19:-20, -17:-16, -16:-17, -14:-13, -13:-14, -11:-10, -10:-11, -8:-7, -7:-8, -5:-4, -4:-5, -2:-1, -1:-2}
 red_chosen = [0 for i in range(0, page_num)]
 blue_chosen = [0 for i in range(0, page_num)]
 last_rotate = 0
 rotor_last = 0
 rotor_now = 0
 sleep_time = 0.6
-def load_pages():
-    for i in range(0, page_num):
-        page_map[3 * i + 1] = i
-        page_map[3 * i + 2] = i
-        page_map[3 * i + 3] = i
-        page_map[3 * i - 19] = i
-        page_map[3 * i - 18] = i
-        page_map[3 * i - 17] = i
-        valid_map[3 * i + 1] = True
-        valid_map[3 * i + 2] = True
-        valid_map[3 * i + 3] = False
-        valid_map[3 * i - 19] = True
-        valid_map[3 * i - 18] = True
-        valid_map[3 * i - 17] = False
 
-    page_map[-1] = 6
-    page_map[19] = 6
-    page_map[0] = 6
-    # for root, dirs, files in os.walk(pages_dir):
-    #     for name in files:
-    #         if '.png' in name:
-    #             news_pages.append(os.path.join(root, name))
-    for i in range(0, page_num):
-        news_pages.append(Image.open(os.path.join(news_dir + str(i) + ".png")))
-        for j in range(1, 101):
-            feedback_pages[0].append(feedback_dir + str(i) + "/F" + str(j) + ".png")
-            feedback_pages[1].append(feedback_dir + str(i) + "/T" + str(j) + ".png")
-    news_pages.append(Image.open("./assets/warning.png"))
+# load pages
+for i in range(0, page_num):
+    page_map[3 * i + 1] = i
+    page_map[3 * i + 2] = i
+    page_map[3 * i + 3] = i
+    # page_map[3 * i - 19] = i
+    # page_map[3 * i - 18] = i
+    # page_map[3 * i - 17] = i
+    valid_map[3 * i + 1] = True
+    valid_map[3 * i + 2] = True
+    valid_map[3 * i + 3] = False
+    # valid_map[3 * i - 19] = True
+    # valid_map[3 * i - 18] = True
+    # valid_map[3 * i - 17] = False
+
+page_map[-1] = 6
+page_map[19] = 6
+page_map[0] = 6
+# for root, dirs, files in os.walk(pages_dir):
+#     for name in files:
+#         if '.png' in name:
+#             news_pages.append(os.path.join(root, name))
+for i in range(0, page_num):
+    news_pages.append(Image.open(os.path.join(news_dir + str(i) + ".png")))
+    for j in range(1, 101):
+        feedback_pages[0].append(feedback_dir + str(i) + "/F" + str(j) + ".png")
+        feedback_pages[1].append(feedback_dir + str(i) + "/T" + str(j) + ".png")
+news_pages.append(Image.open("./assets/warning.png"))
+
+loading = Image.open("./assets/loading.mp4")
+print(news_pages)
+print(page_map)
+print(red_chosen)
+
+
 
 
 
@@ -108,9 +116,11 @@ def red_touched():
         if valid_map[rotor.value * 20]:
             print("red touched")
             red_chosen[page_map[rotor.value * 20]] += 1
+            news_pic.image =
             relay_red.on()
             sleep(sleep_time)
             relay_red.off()
+
             prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
             news_pic.image = feedback_pages[0][int(prop)]
             print("red: blue = " , prop)
@@ -160,23 +170,23 @@ def rotor_rotated():
 
 
 def calibrate():
-    rotor.value = 0
+    rotor.value = -1
 
 def goodbye():
     app.destroy()
-# main GUI
-load_pages()
 
-print(news_pages)
-print(page_map)
-print(red_chosen)
+
+calibrate()
+
+# GUI app start
 app = App(title="guizero", width=800, height=480)
+app.set_full_screen()
 
 # intro = Text(app, text="Welcome to InfoClinic", size=40, font="Monaco", color="lavender")
 # text_box = TextBox(app)
 # ok = PushButton(app, command=text_update, text="mes")
 welcome = Image.open(test_welcome)
-news_pic = Picture(app, image=welcome, width=800, height=450)
+news_pic = Picture(app, image=welcome, full_screen=True, width=800, height=450)
 # news_pic.when_left_button_pressed = route_pages
 # news_pic.when_right_button_pressed = last_news
 # btn_red = PushButton(app, command=red_touched, visible=False)
