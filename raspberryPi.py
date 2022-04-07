@@ -44,30 +44,32 @@ chart_pages = []
 page_num = 6
 page_map= {}
 valid_map = {}
+change_map = {0:1, 1:0, 3:4, 4:3, 6:7, 7:6, 9:10, 10:9, 12:13, 13:12, 15:16, 16:15, 18:19, 19:18,
+                -20:-19, -19:-20, -17:-16, -16:-17, -14:-13, -13:-14, -11:-10, -10:-11, -8:-7, -7:-8, -5:-4, -4:-5, -2:-1, -1:-2}
 red_chosen = [0 for i in range(0, page_num)]
 blue_chosen = [0 for i in range(0, page_num)]
 last_rotate = 0
-
+rotor_last = 0
+rotor_now = 0
 sleep_time = 0.6
 def load_pages():
     for i in range(0, page_num):
-        page_map[3 * i] = i
         page_map[3 * i + 1] = i
         page_map[3 * i + 2] = i
-        page_map[3 * i - 20] = i
+        page_map[3 * i + 3] = i
         page_map[3 * i - 19] = i
         page_map[3 * i - 18] = i
-        valid_map[3 * i] = False
+        page_map[3 * i - 17] = i
         valid_map[3 * i + 1] = True
         valid_map[3 * i + 2] = True
-        valid_map[3 * i - 20] = False
+        valid_map[3 * i + 3] = False
         valid_map[3 * i - 19] = True
         valid_map[3 * i - 18] = True
+        valid_map[3 * i - 17] = False
 
-    page_map[18] = 5
-    page_map[-2] = 5
-    page_map[19] = 0
-    page_map[-1] = 0
+    page_map[-1] = 6
+    page_map[19] = 6
+    page_map[0] = 6
     # for root, dirs, files in os.walk(pages_dir):
     #     for name in files:
     #         if '.png' in name:
@@ -77,7 +79,7 @@ def load_pages():
         for j in range(1, 101):
             feedback_pages[0].append(feedback_dir + str(i) + "/F" + str(j) + ".png")
             feedback_pages[1].append(feedback_dir + str(i) + "/T" + str(j) + ".png")
-
+    news_pages.append("./assets/warning.png")
 
 
 
@@ -136,15 +138,25 @@ def rotor_pressed():
     print("rotor pressed")
     # next_news()
 
+def check_change(r1, r2):
+    if r1 in change_map and change_map[r1] == r2:
+        return True
+    return False
+
 def rotor_rotated():
     last_rotate = 1
-    print("rotor rotated", rotor.value * 20)
+
     # reset value
     if rotor.value == 1:
         rotor.value = 0
     if rotor.value == -1:
         rotor.value = 0
-    news_pic.image = news_pages[page_map[rotor.value * 20]]
+    rotor_now = rotor.value * 20
+    print("rotor rotated", rotor_now)
+    if check_change(rotor_now, rotor_last):
+        news_pic.image = news_pages[page_map[rotor.value * 20]]
+    rotor_last = rotor.value * 20
+
 
 def calibrate():
     rotor.value = 0
