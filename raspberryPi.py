@@ -81,7 +81,7 @@ for i in range(0, page_num):
         feedback_pages[0].append(feedback_dir + str(i) + "/F" + str(j) + ".png")
         feedback_pages[1].append(feedback_dir + str(i) + "/T" + str(j) + ".png")
 news_pages.append(Image.open("./assets/warning.png"))
-loading = Image.open("./assets/loading.mp4")
+loading = Image.open("./assets/loading.gif")
 
 print(news_pages)
 print(page_map)
