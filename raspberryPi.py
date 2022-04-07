@@ -81,14 +81,11 @@ for i in range(0, page_num):
         feedback_pages[0].append(feedback_dir + str(i) + "/F" + str(j) + ".png")
         feedback_pages[1].append(feedback_dir + str(i) + "/T" + str(j) + ".png")
 news_pages.append(Image.open("./assets/warning.png"))
-
 loading = Image.open("./assets/loading.mp4")
+
 print(news_pages)
 print(page_map)
 print(red_chosen)
-
-
-
 
 
 def route_pages():
@@ -116,12 +113,12 @@ def red_touched():
         if valid_map[rotor.value * 20]:
             print("red touched")
             red_chosen[page_map[rotor.value * 20]] += 1
-            news_pic.image =
+            news_pic.image = loading
             relay_red.on()
             sleep(sleep_time)
             relay_red.off()
-
             prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
+            sleep(8)
             news_pic.image = feedback_pages[0][int(prop)]
             print("red: blue = " , prop)
         else:
