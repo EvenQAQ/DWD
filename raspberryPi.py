@@ -19,8 +19,8 @@ if platform. system() == "Darwin":
 else:
     factory = PiGPIOFactory()
 
-btn_rotor = Button(17, pin_factory=factory)
-rotor = RotaryEncoder(27, 22, max_steps=20, wrap=True, pin_factory=factory)
+btn_rotor = Button(22, pin_factory=factory)
+rotor = RotaryEncoder(27, 17, max_steps=20, wrap=True, pin_factory=factory)
 
 # btn_red = Button(24, pin_factory=factory)
 # btn_blue = Button(23, pin_factory=factory)
@@ -142,6 +142,9 @@ def rotor_rotated():
 
 def calibrate():
     rotor.value = 0
+
+def goodbye():
+    app.destroy()
 # main GUI
 load_pages()
 
@@ -166,6 +169,6 @@ rotor.when_rotated = rotor_rotated
 touch_red.when_activated = red_touched
 touch_blue.when_activated = blue_touched
 
-
+app.when_closed = goodbye
 app.display()
 
