@@ -167,7 +167,7 @@ def rotor_rotated():
 
 
 def calibrate():
-    rotor.value = -1
+    rotor.value = -1/20
 
 def goodbye():
     app.destroy()
