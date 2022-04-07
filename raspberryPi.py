@@ -151,7 +151,7 @@ load_pages()
 print(news_pages)
 print(page_map)
 print(red_chosen)
-app = App(title="guizero",  full_screen=True)
+app = App(title="guizero", width=800, height=480)
 
 # intro = Text(app, text="Welcome to InfoClinic", size=40, font="Monaco", color="lavender")
 # text_box = TextBox(app)
