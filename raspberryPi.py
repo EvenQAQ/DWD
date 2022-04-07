@@ -9,7 +9,7 @@ from guizero import App, Picture, PushButton
 from gpiozero import Button, OutputDevice, RotaryEncoder, DigitalInputDevice, InputDevice
 from gpiozero.pins.pigpio import PiGPIOFactory
 from gpiozero.tools import scaled_half
-
+from PIL import Image, ImageTk
 
 
 # register GPIO
