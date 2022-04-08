@@ -87,7 +87,7 @@ for i in range(0, page_num):
 news_pages.append(Image.open("./assets/warning.png"))
 
 for i in range(0, 11):
-    loading_pages.append(Image.open(loading_dir + str(i) + "jpg"))
+    loading_pages.append(Image.open(loading_dir + str(i) + ".jpg"))
 # loading = Image.open("./assets/loading5.gif")
 
 print(news_pages)
