@@ -3,6 +3,7 @@ import os
 import sys
 import time
 from time import sleep
+import datetime
 import platform
 
 from guizero import App, Picture, PushButton
@@ -11,6 +12,12 @@ from gpiozero.pins.pigpio import PiGPIOFactory
 from gpiozero.tools import scaled_half
 from PIL import Image, ImageTk
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--position", type=int, default=3, help="input default position")
+args = parser.parse_args()
+rotor_last = args.position
+rotor_now = rotor_last + 1
 
 # register GPIO
 if platform. system() == "Darwin":
@@ -50,8 +57,6 @@ change_map = {0:1, 1:0, 3:4, 4:3, 6:7, 7:6, 9:10, 10:9, 12:13, 13:12, 15:16, 16:
 red_chosen = [0 for i in range(0, page_num)]
 blue_chosen = [0 for i in range(0, page_num)]
 last_rotate = 0
-rotor_last = 0
-rotor_now = 0
 sleep_time = 0.6
 
 # load pages
@@ -89,11 +94,15 @@ news_pages.append(Image.open("./assets/warning.png"))
 for i in range(0, 11):
     loading_pages.append(Image.open(loading_dir + str(i) + ".jpg"))
 # loading = Image.open("./assets/loading5.gif")
+welcome = Image.open(test_welcome)
 
 print(news_pages)
 print(page_map)
 print(red_chosen)
 
+def return_default(start_time, end_time):
+    if (end_time - start_time).seconds > 5:
+        news_pic.image = welcome
 
 def route_pages():
     news_pic.image = news_pages[page_num]
@@ -179,14 +188,14 @@ def rotor_rotated():
     rotor_last = rotor.value * 20
 
 
-def calibrate():
-    rotor.value = -1/20
+def calibrate(n):
+    rotor.value = n/20
 
 def goodbye():
     app.destroy()
 
 
-calibrate()
+# calibrate(-1)
 
 # GUI app start
 app = App(title="guizero", width=800, height=480)
@@ -195,7 +204,7 @@ app.set_full_screen()
 # intro = Text(app, text="Welcome to InfoClinic", size=40, font="Monaco", color="lavender")
 # text_box = TextBox(app)
 # ok = PushButton(app, command=text_update, text="mes")
-welcome = Image.open(test_welcome)
+
 news_pic = Picture(app, image=welcome, width=800, height=450)
 # news_pic.when_left_button_pressed = route_pages
 # news_pic.when_right_button_pressed = last_news
