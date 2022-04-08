@@ -5,6 +5,7 @@ import time
 from time import sleep
 import datetime
 import platform
+import numpy as np
 
 from guizero import App, Picture, PushButton
 from gpiozero import Button, OutputDevice, RotaryEncoder, DigitalInputDevice, InputDevice
@@ -193,6 +194,8 @@ def calibrate(n):
     rotor.value = n/20
 
 def goodbye():
+    np.savetxt("true-" + datetime.now().date().isoformat() +'.csv', blue_chosen, delimeter=",")
+    np.savetxt("false-" + datetime.now().date().isoformat() +'.csv', red_chosen, delimeter=",")
     app.destroy()
 
 
