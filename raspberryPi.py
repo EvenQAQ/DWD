@@ -194,8 +194,8 @@ def calibrate(n):
     rotor.value = n/20
 
 def goodbye():
-    np.savetxt("true-" + datetime.now().date().isoformat() +'.csv', blue_chosen, delimeter=",")
-    np.savetxt("false-" + datetime.now().date().isoformat() +'.csv', red_chosen, delimeter=",")
+    np.save("true-" + datetime.now().date().isoformat() +'.csv', blue_chosen)
+    np.save("false-" + datetime.now().date().isoformat() +'.csv', red_chosen)
     app.destroy()
 
 
