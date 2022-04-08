@@ -84,7 +84,7 @@ for i in range(0, page_num):
         feedback_pages[0].append(feedback_dir + str(i) + "/F" + str(j) + ".png")
         feedback_pages[1].append(feedback_dir + str(i) + "/T" + str(j) + ".png")
 news_pages.append(Image.open("./assets/warning.png"))
-loading = Image.open("./assets/loading11.gif")
+loading = Image.open("./assets/loading5.gif")
 
 print(news_pages)
 print(page_map)
@@ -122,7 +122,7 @@ def red_touched():
             relay_red.off()
             prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
             news_pic.image = loading
-            sleep(12)
+            sleep(5)
             news_pic.image = feedback_pages[0][int(prop)]
             print("red: blue = " , prop)
         else:
@@ -141,7 +141,7 @@ def blue_touched():
             relay_blue.off()
             prop = calc_feedback(blue_chosen[page_map[rotor.value * 20]], red_chosen[page_map[rotor.value * 20]])
             news_pic.image = loading
-            sleep(12)
+            sleep(5)
             news_pic.image = feedback_pages[1][int(prop)]
             print("blue: red = " , prop)
         else:
