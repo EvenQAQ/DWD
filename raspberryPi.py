@@ -56,8 +56,8 @@ page_map= {}
 valid_map = {}
 change_map = {0:1, 1:0, 3:4, 4:3, 6:7, 7:6, 9:10, 10:9, 12:13, 13:12, 15:16, 16:15, 18:19, 19:18}
 # change_map = {0:1, 1:0, 3:4, 4:3, 6:7, 7:6, 9:10, 10:9, 12:13, 13:12, 15:16, 16:15, 18:19, 19:18, -20:-19, -19:-20, -17:-16, -16:-17, -14:-13, -13:-14, -11:-10, -10:-11, -8:-7, -7:-8, -5:-4, -4:-5, -2:-1, -1:-2}
-red_chosen = [0 for i in range(0, page_num)]
-blue_chosen = [0 for i in range(0, page_num)]
+red_chosen = []
+blue_chosen = []
 last_rotate = 0
 sleep_time_r = 0.6
 sleep_time_b = 0.6
@@ -97,6 +97,18 @@ news_pages.append(Image.open("./assets/warning.png"))
 for i in range(0, 11):
     loading_pages.append(Image.open(loading_dir + str(i) + ".jpg"))
 # loading = Image.open("./assets/loading5.gif")
+
+with open('./test.csv', "r") as f:
+    red_line = f.readline()
+    red_ar = red_line.split(',')
+    blue_line = f.readline()
+    blue_ar = blue_line.split(',')
+    for i in range(0, 6):
+        red_chosen.append(int(red_ar[i]))
+        blue_chosen.append(int(blue_ar[i]))
+
+print(red_chosen)
+print(blue_chosen)
 welcome = Image.open(test_welcome)
 
 print(news_pages)
@@ -195,7 +207,7 @@ def calibrate(n):
     rotor.value = n/20
 
 def goodbye():
-    with open(args.name +'.csv', "a") as f:
+    with open(args.name +'.csv', "w") as f:
         for i in red_chosen:
             f.write(str(i))
             f.write(', ')
