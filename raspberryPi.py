@@ -76,6 +76,8 @@ page_map[0] = 6
 #     for name in files:
 #         if '.png' in name:
 #             news_pages.append(os.path.join(root, name))
+feedback_pages[0].append(0)
+feedback_pages[1].append(0)
 for i in range(0, page_num):
     news_pages.append(Image.open(os.path.join(news_dir + str(i) + ".png")))
     for j in range(1, 101):
