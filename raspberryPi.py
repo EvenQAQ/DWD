@@ -57,7 +57,7 @@ change_map = {0:1, 1:0, 3:4, 4:3, 6:7, 7:6, 9:10, 10:9, 12:13, 13:12, 15:16, 16:
 red_chosen = [0 for i in range(0, page_num)]
 blue_chosen = [0 for i in range(0, page_num)]
 last_rotate = 0
-sleep_time = 0.6
+sleep_time = 0.8
 
 # load pages
 for i in range(0, page_num):
