@@ -60,7 +60,7 @@ red_chosen = [0 for i in range(0, page_num)]
 blue_chosen = [0 for i in range(0, page_num)]
 last_rotate = 0
 sleep_time_r = 0.6
-sleep_time_b = 1
+sleep_time_b = 0.6
 
 # load pages
 for i in range(0, page_num):
