@@ -63,7 +63,8 @@ for i in range(0, page_num):
     # page_map[3 * i - 17] = i
     valid_map[3 * i + 1] = True
     valid_map[3 * i + 2] = True
-    valid_map[3 * i + 3] = False
+    valid_map[3 * i + 3] = True
+    # valid_map[3 * i + 3] = False
     # valid_map[3 * i - 19] = True
     # valid_map[3 * i - 18] = True
     # valid_map[3 * i - 17] = False
