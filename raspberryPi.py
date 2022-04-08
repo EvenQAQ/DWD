@@ -32,7 +32,7 @@ relay_blue = OutputDevice(15, pin_factory=factory, active_high=True, initial_val
 root_dir = "./assets/"
 news_dir = "./assets/news/"
 feedback_dir = "./assets/feedback/"
-pie_dir = "./assets/chart"
+loading_dir = "./assets/laoding/"
 
 test_welcome = root_dir + 'welcome.png'
 test_news = root_dir + 'test_news.png'
@@ -41,6 +41,7 @@ test_feedback = root_dir + 'test_feedback.png'
 news_pages = []
 feedback_pages = [[], []]
 chart_pages = []
+loading_pages = []
 page_num = 6
 page_map= {}
 valid_map = {}
@@ -84,7 +85,10 @@ for i in range(0, page_num):
         feedback_pages[0].append(feedback_dir + str(i) + "/F" + str(j) + ".png")
         feedback_pages[1].append(feedback_dir + str(i) + "/T" + str(j) + ".png")
 news_pages.append(Image.open("./assets/warning.png"))
-loading = Image.open("./assets/loading5.gif")
+
+for i in range(0, 11):
+    loading_pages.append(Image.open(loading_dir + str(i) + "jpg"))
+# loading = Image.open("./assets/loading5.gif")
 
 print(news_pages)
 print(page_map)
@@ -121,7 +125,9 @@ def red_touched():
             sleep(sleep_time)
             relay_red.off()
             prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
-            news_pic.image = loading
+            for i in range(0, 11):
+                news_pic.image = loading_pages[i]
+                sleep(0.8)
             sleep(6)
             news_pic.image = feedback_pages[0][int(prop)]
             print("red: blue = " , prop)
@@ -140,7 +146,9 @@ def blue_touched():
             sleep(sleep_time)
             relay_blue.off()
             prop = calc_feedback(blue_chosen[page_map[rotor.value * 20]], red_chosen[page_map[rotor.value * 20]])
-            news_pic.image = loading
+            for i in range(0, 11):
+                news_pic.image = loading_pages[i]
+                sleep(0.8)
             sleep(6)
             news_pic.image = feedback_pages[1][int(prop)]
             print("blue: red = " , prop)
