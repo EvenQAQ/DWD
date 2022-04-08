@@ -196,7 +196,7 @@ def goodbye():
     app.destroy()
 
 
-# calibrate(-1)
+calibrate(rotor_now)
 
 # GUI app start
 app = App(title="guizero", width=800, height=480)
