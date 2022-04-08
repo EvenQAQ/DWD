@@ -32,7 +32,7 @@ relay_blue = OutputDevice(15, pin_factory=factory, active_high=True, initial_val
 root_dir = "./assets/"
 news_dir = "./assets/news/"
 feedback_dir = "./assets/feedback/"
-loading_dir = "./assets/laoding/"
+loading_dir = "./assets/loading/"
 
 test_welcome = root_dir + 'welcome.png'
 test_news = root_dir + 'test_news.png'
