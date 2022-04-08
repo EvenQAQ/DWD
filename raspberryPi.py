@@ -19,7 +19,7 @@ parser.add_argument("-n", "--name", type=str, help="input name")
 parser.add_argument("-p", "--position", type=int, default=3, help="input default position")
 args = parser.parse_args()
 rotor_now = args.position
-rotor_last = rotor_last + 1
+rotor_last = rotor_now + 1
 
 # register GPIO
 if platform. system() == "Darwin":
