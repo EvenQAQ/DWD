@@ -15,10 +15,11 @@ from PIL import Image, ImageTk
 
 import argparse
 parser = argparse.ArgumentParser()
+parser.add_argument("-n", "--name", type=str, help="input name")
 parser.add_argument("-p", "--position", type=int, default=3, help="input default position")
 args = parser.parse_args()
-rotor_last = args.position
-rotor_now = rotor_last + 1
+rotor_now = args.position
+rotor_last = rotor_last + 1
 
 # register GPIO
 if platform. system() == "Darwin":
@@ -194,7 +195,7 @@ def calibrate(n):
     rotor.value = n/20
 
 def goodbye():
-    with open(datetime.now().date().isoformat() +'.csv', "a") as f:
+    with open(args.name +'.csv', "a") as f:
         for i in red_chosen:
             f.write(str(i))
             f.write(', ')
