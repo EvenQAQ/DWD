@@ -57,7 +57,8 @@ change_map = {0:1, 1:0, 3:4, 4:3, 6:7, 7:6, 9:10, 10:9, 12:13, 13:12, 15:16, 16:
 red_chosen = [0 for i in range(0, page_num)]
 blue_chosen = [0 for i in range(0, page_num)]
 last_rotate = 0
-sleep_time = 0.8
+sleep_time_r = 0.6
+sleep_time_b = 1
 
 # load pages
 for i in range(0, page_num):
@@ -131,7 +132,7 @@ def red_touched():
             red_chosen[page_map[rotor.value * 20]] += 1
 
             relay_red.on()
-            sleep(sleep_time)
+            sleep(sleep_time_r)
             relay_red.off()
             prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
             for i in range(0, 11):
@@ -151,7 +152,7 @@ def blue_touched():
             blue_chosen[page_map[rotor.value * 20]] += 1
 
             relay_blue.on()
-            sleep(sleep_time)
+            sleep(sleep_time_b)
             relay_blue.off()
             prop = calc_feedback(blue_chosen[page_map[rotor.value * 20]], red_chosen[page_map[rotor.value * 20]])
             for i in range(0, 11):
