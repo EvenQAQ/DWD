@@ -127,8 +127,7 @@ def red_touched():
             prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
             for i in range(0, 11):
                 news_pic.image = loading_pages[i]
-                sleep(0.8)
-            sleep(6)
+                # sleep(0.8)
             news_pic.image = feedback_pages[0][int(prop)]
             print("red: blue = " , prop)
         else:
@@ -148,8 +147,7 @@ def blue_touched():
             prop = calc_feedback(blue_chosen[page_map[rotor.value * 20]], red_chosen[page_map[rotor.value * 20]])
             for i in range(0, 11):
                 news_pic.image = loading_pages[i]
-                sleep(0.8)
-            sleep(6)
+                # sleep(0.8)
             news_pic.image = feedback_pages[1][int(prop)]
             print("blue: red = " , prop)
         else:
