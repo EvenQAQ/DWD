@@ -94,6 +94,7 @@ for i in range(0, page_num):
         feedback_pages[1].append(feedback_dir + str(i) + "/T" + str(j) + ".png")
 news_pages.append(Image.open("./assets/warning.png"))
 
+
 for i in range(0, 11):
     loading_pages.append(Image.open(loading_dir + str(i) + ".jpg"))
 # loading = Image.open("./assets/loading5.gif")
@@ -110,6 +111,7 @@ with open('./test.csv', "r") as f:
 print(red_chosen)
 print(blue_chosen)
 welcome = Image.open(test_welcome)
+news_pages.append(welcome)
 
 print(news_pages)
 print(page_map)
@@ -119,8 +121,9 @@ def return_default(start_time, end_time):
     if (end_time - start_time).seconds > 5:
         news_pic.image = welcome
 
-def route_pages():
-    news_pic.image = news_pages[rotor_now]
+def route_pages(event):
+    news_pic.image = news_pages[]
+
 
 def next_news():
     global rotor_now
