@@ -121,8 +121,6 @@ def return_default(start_time, end_time):
     if (end_time - start_time).seconds > 5:
         news_pic.image = welcome
 
-def route_pages(event):
-    news_pic.image = news_pages[]
 
 
 def next_news():
