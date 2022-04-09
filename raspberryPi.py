@@ -16,7 +16,7 @@ from PIL import Image, ImageTk
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-n", "--name", type=str, help="input name")
-parser.add_argument("-p", "--position", type=int, default=3, help="input default position")
+parser.add_argument("-p", "--position", type=int, default=0, help="input default position")
 args = parser.parse_args()
 rotor_now = args.position
 rotor_last = rotor_now + 1
@@ -29,7 +29,7 @@ else:
     factory = PiGPIOFactory()
 
 btn_rotor = Button(22, pin_factory=factory)
-rotor = RotaryEncoder(27, 17, max_steps=20, wrap=True, pin_factory=factory)
+# rotor = RotaryEncoder(27, 17, max_steps=20, wrap=True, pin_factory=factory)
 
 # btn_red = Button(24, pin_factory=factory)
 # btn_blue = Button(23, pin_factory=factory)
@@ -120,62 +120,80 @@ def return_default(start_time, end_time):
         news_pic.image = welcome
 
 def route_pages():
-    news_pic.image = news_pages[page_num]
+    news_pic.image = news_pages[rotor_now]
 
 def next_news():
-    global page_num
-    page_num += 1
-    news_pic.image = news_pages[page_num]
-    return news_pages[page_num]
+    global rotor_now
+    rotor_now += 1
+    news_pic.image = news_pages[rotor_now]
+    return news_pages[rotor_now]
 
 def last_news():
-    global page_num
-    page_num -= 1
-    news_pic.image = news_pages[page_num]
-    return news_pages[page_num]
+    global rotor_now
+    rotor_now -= 1
+    news_pic.image = news_pages[rotor_now]
+    return news_pages[rotor_now]
 
 def calc_feedback(num1, num2):
     return 100 * num1/(num1 + num2)
 
-def red_touched():
-    global last_rotate
-    if last_rotate == 1:
-        last_rotate = 0
-        if valid_map[rotor.value * 20]:
-            print("red touched")
-            red_chosen[page_map[rotor.value * 20]] += 1
+# def red_touched():
+#     global last_rotate
+#     if last_rotate == 1:
+#         last_rotate = 0
+#         if valid_map[rotor.value * 20]:
+#             print("red touched")
+#             red_chosen[page_map[rotor.value * 20]] += 1
 
-            relay_red.on()
-            sleep(sleep_time_r)
-            relay_red.off()
-            prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
-            for i in range(0, 11):
-                news_pic.image = loading_pages[i]
-                sleep(0.8)
-            news_pic.image = feedback_pages[0][int(prop)]
-            print("red: blue = " , prop)
-        else:
-            print("position error")
+#             relay_red.on()
+#             sleep(sleep_time_r)
+#             relay_red.off()
+#             prop = calc_feedback(red_chosen[page_map[rotor.value * 20]], blue_chosen[page_map[rotor.value * 20]])
+#             for i in range(0, 11):
+#                 news_pic.image = loading_pages[i]
+#                 sleep(0.8)
+#             news_pic.image = feedback_pages[0][int(prop)]
+#             print("red: blue = " , prop)
+#         else:
+#             print("position error")
 
-def blue_touched():
-    global last_rotate
-    if last_rotate == 1:
-        last_rotate = 0
-        print("blue touched")
-        if valid_map[rotor.value * 20]:
-            blue_chosen[page_map[rotor.value * 20]] += 1
+def red_pressed():
+    red_chosen[rotor_now] += 1
+    prop = calc_feedback(red_chosen[page_map[rotor_now]], blue_chosen[page_map[rotor_now]])
+    for i in range(0, 11):
+        news_pic.image = loading_pages[i]
+        sleep(0.5)
+    news_pic.image = feedback_pages[0][int(prop)]
+    print("red: blue = " , prop)
 
-            relay_blue.on()
-            sleep(sleep_time_b)
-            relay_blue.off()
-            prop = calc_feedback(blue_chosen[page_map[rotor.value * 20]], red_chosen[page_map[rotor.value * 20]])
-            for i in range(0, 11):
-                news_pic.image = loading_pages[i]
-                sleep(0.8)
-            news_pic.image = feedback_pages[1][int(prop)]
-            print("blue: red = " , prop)
-        else:
-            print("position error")
+def blue_pressed():
+    blue_chosen[rotor_now] += 1
+    prop = calc_feedback(red_chosen[page_map[rotor_now]], blue_chosen[page_map[rotor_now]])
+    for i in range(0, 11):
+        news_pic.image = loading_pages[i]
+        sleep(0.5)
+    news_pic.image = feedback_pages[0][int(prop)]
+    print("red: blue = " , prop)
+
+# def blue_touched():
+#     global last_rotate
+#     if last_rotate == 1:
+#         last_rotate = 0
+#         print("blue touched")
+#         if valid_map[rotor.value * 20]:
+#             blue_chosen[page_map[rotor.value * 20]] += 1
+
+#             relay_blue.on()
+#             sleep(sleep_time_b)
+#             relay_blue.off()
+#             prop = calc_feedback(blue_chosen[page_map[rotor.value * 20]], red_chosen[page_map[rotor.value * 20]])
+#             for i in range(0, 11):
+#                 news_pic.image = loading_pages[i]
+#                 sleep(0.8)
+#             news_pic.image = feedback_pages[1][int(prop)]
+#             print("blue: red = " , prop)
+#         else:
+#             print("position error")
 
 def rotor_pressed():
     print("rotor pressed")
@@ -186,25 +204,25 @@ def check_change(r1, r2):
         return True
     return False
 
-def rotor_rotated():
-    global last_rotate
-    last_rotate = 1
-    global rotor_last
-    global rotor_now
-    # reset value
-    if rotor.value == 1:
-        rotor.value = 0
-    if rotor.value == -1:
-        rotor.value = 0
-    rotor_now = rotor.value * 20
-    print("rotor rotated", rotor_now)
-    if check_change(rotor_now, rotor_last):
-        news_pic.image = news_pages[page_map[rotor.value * 20]]
-    rotor_last = rotor.value * 20
+# def rotor_rotated():
+#     global last_rotate
+#     last_rotate = 1
+#     global rotor_last
+#     global rotor_now
+#     # reset value
+#     if rotor.value == 1:
+#         rotor.value = 0
+#     if rotor.value == -1:
+#         rotor.value = 0
+#     rotor_now = rotor.value * 20
+#     print("rotor rotated", rotor_now)
+#     if check_change(rotor_now, rotor_last):
+#         news_pic.image = news_pages[page_map[rotor.value * 20]]
+#     rotor_last = rotor.value * 20
 
 
-def calibrate(n):
-    rotor.value = n/20
+# def calibrate(n):
+#     rotor.value = n/20
 
 def goodbye():
     with open(args.name +'.csv', "w") as f:
@@ -222,7 +240,7 @@ def goodbye():
     app.destroy()
 
 
-calibrate(rotor_now)
+# calibrate(rotor_now)
 
 # GUI app start
 app = App(title="guizero", width=800, height=480)
@@ -233,17 +251,17 @@ app.set_full_screen()
 # ok = PushButton(app, command=text_update, text="mes")
 
 news_pic = Picture(app, image=welcome, width=800, height=480)
-# news_pic.when_left_button_pressed = route_pages
-# news_pic.when_right_button_pressed = last_news
+news_pic.when_left_button_pressed = next_news
+news_pic.when_right_button_pressed = last_news
 # btn_red = PushButton(app, command=red_touched, visible=False)
 # btn_blue = PushButton(app, command=blue_touched, visible=False)
 
-btn_rotor.when_pressed = rotor_pressed
-rotor.when_rotated = rotor_rotated
+# btn_rotor.when_pressed = rotor_pressed
+# rotor.when_rotated = rotor_rotated
 # rotor.when_rotated_clockwise = next_news
 # rotor.when_rotated_counter_clockwise = last_news
-touch_red.when_activated = red_touched
-touch_blue.when_activated = blue_touched
+touch_red.when_activated = red_pressed
+touch_blue.when_activated = blue_pressed
 
 app.when_closed = goodbye
 app.display()
