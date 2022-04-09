@@ -1,4 +1,4 @@
-0 b,b,b,r,b,r,b,b,r,r,b,b,r,r,b,b,b,b,b,b,r,b,b,b
+0 b,b,b,r,b,r,b,b,r,b,r,b,r,r,b,b,b,b,b,b,r,b,b,b
 1 r,r,b,r,b
 2 b,r,b,b,r,r,b,
 3 r,r,r,r,b,b,

@@ -123,6 +123,7 @@ def return_default(start_time, end_time):
 
 
 
+
 def next_news():
     global rotor_now
     rotor_now += 1
@@ -196,6 +197,15 @@ def blue_pressed():
 #         else:
 #             print("position error")
 
+
+def pic_clicked(event):
+    mouse_x = event.x
+    mouse_y = event.y
+    if mouse_x < 400:
+        blue_pressed()
+    else:
+        red_pressed()
+
 def rotor_pressed():
     print("rotor pressed")
     # next_news()
@@ -254,6 +264,7 @@ app.set_full_screen()
 news_pic = Picture(app, image=welcome, width=800, height=480)
 news_pic.when_left_button_pressed = next_news
 news_pic.when_right_button_pressed = last_news
+news_pic.when_click = pic_clicked
 # btn_red = PushButton(app, command=red_touched, visible=False)
 # btn_blue = PushButton(app, command=blue_touched, visible=False)
 
